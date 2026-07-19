@@ -1,0 +1,9 @@
+{
+  "name": "thisone",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Fresh grocery comparison assistant built for OpenAI Build Week",
+  "engines": {
+    "node": ">=20"
+  }
+}

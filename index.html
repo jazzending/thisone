@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ThisOne - Fresh grocery picking assistant</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">ThisOne</p>
+          <h1>Which pack should you actually buy?</h1>
+          <p class="hero-copy">
+            Snap the meat, fruit, veg, or fish in front of you. ThisOne compares
+            the visible clues, like cut, freshness, ripeness, fat, and sweetness,
+            then helps you choose the pack that fits what you want to eat.
+          </p>
+          <div class="phone-preview" aria-label="ThisOne comparison thumbnail">
+            <div class="thumbnail-options" aria-hidden="true">
+              <div class="thumbnail-pack apple-pack apple-pack-a">
+                <span>A</span>
+                <i></i>
+              </div>
+              <div class="thumbnail-pack apple-pack apple-pack-b is-best">
+                <span>B</span>
+                <i></i>
+              </div>
+              <div class="thumbnail-pack apple-pack apple-pack-c">
+                <span>C</span>
+                <i></i>
+              </div>
+            </div>
+            <p class="thumbnail-caption">For a sweeter, crisper bite, B is the pick.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="ThisOne grocery comparison tool">
+        <div class="panel setup-panel">
+          <div class="panel-heading">
+            <p class="step-label">Step 1</p>
+            <h2>What shelf are we looking at?</h2>
+          </div>
+
+          <div class="category-picker" id="categoryPicker" aria-label="Fresh category">
+            <button class="category-card is-selected" type="button" data-category="fruit">
+              <span class="food-icon produce-icon" aria-hidden="true"></span>
+              <strong>Fruit</strong>
+              <small>variety, ripe, sweet</small>
+            </button>
+            <button class="category-card" type="button" data-category="veg">
+              <span class="food-icon veg-icon" aria-hidden="true"></span>
+              <strong>Veg</strong>
+              <small>leaf, stem, crunch</small>
+            </button>
+            <button class="category-card" type="button" data-category="seafood">
+              <span class="food-icon seafood-icon" aria-hidden="true"></span>
+              <strong>Seafood</strong>
+              <small>fish and shellfish</small>
+            </button>
+            <button class="category-card" type="button" data-category="meat">
+              <span class="food-icon meat-icon" aria-hidden="true"></span>
+              <strong>Meat</strong>
+              <small>packs, cuts, slices</small>
+            </button>
+          </div>
+
+          <div class="upload-zone">
+            <div class="upload-graphic" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div>
+              <h3>Upload photos</h3>
+              <p>
+                Add up to 4 items. Take one shelf photo or upload one photo per
+                package. Regular photos under 15MB work best.
+              </p>
+            </div>
+            <div class="actions">
+              <label class="upload-button">
+                Upload photos
+                <input id="photoInput" type="file" accept="image/*" multiple />
+              </label>
+              <button id="loadSample" type="button" class="secondary-button">
+                Load demo scan
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel options-panel">
+          <div class="panel-heading compact-heading">
+            <div>
+              <p class="step-label">Step 2</p>
+              <h2>AI scan results</h2>
+            </div>
+            <span id="itemCount" class="count-pill">3 found</span>
+          </div>
+          <div class="scan-note" id="scanNote">
+            ThisOne estimates the specific cut or part, freshness cues, ripeness, sweetness, and best cooking fit.
+          </div>
+          <div class="same-label-note">
+            Same label? ThisOne still compares what is visible.
+          </div>
+          <p class="prototype-note" id="analysisStatus">
+            Demo mode: load a sample shelf, or upload photos after live analysis is set up.
+          </p>
+          <div id="optionGrid" class="option-grid" aria-live="polite"></div>
+        </div>
+
+        <aside class="panel pick-panel">
+          <div class="panel-heading">
+            <p class="step-label">Step 3</p>
+            <h2>Need me to choose?</h2>
+            <p class="helper-text">
+              Is the comparison enough, or should ThisOne keep going and pick the best one for you?
+            </p>
+          </div>
+
+          <div class="choice-toggle" id="choiceToggle">
+            <button class="toggle-button is-selected" type="button" data-help="yes">
+              Help me choose
+            </button>
+            <button class="toggle-button" type="button" data-help="no">
+              Comparison is enough
+            </button>
+          </div>
+
+          <div class="pick-questions" id="pickQuestions">
+            <div class="chat-row bot-row">
+              <span class="avatar">T</span>
+              <div class="chat-bubble bot">When will you eat it?</div>
+            </div>
+            <div class="pill-group flush" id="timingGroup">
+              <button type="button" class="pill is-selected" data-value="tonight">Tonight</button>
+              <button type="button" class="pill" data-value="tomorrow">Tomorrow</button>
+              <button type="button" class="pill" data-value="later">In a few days</button>
+              <button type="button" class="pill" data-value="unsure">Not sure</button>
+            </div>
+
+            <div class="chat-row bot-row">
+              <span class="avatar">T</span>
+              <div class="chat-bubble bot">How will you cook it?</div>
+            </div>
+            <div class="pill-group flush" id="methodGroup"></div>
+
+            <label class="field quiet-field other-field" id="otherField">
+              <span>Dish or cooking style</span>
+              <input
+                id="otherMethod"
+                type="text"
+                placeholder="Example: bulgogi, curry, tacos, tomato soup"
+              />
+            </label>
+
+            <label class="field quiet-field">
+              <span>Any dietary needs?</span>
+              <textarea
+                id="context"
+                rows="3"
+                placeholder="Example: low sugar, weight control, muscle gain, low fat, high protein, kid-friendly."
+              ></textarea>
+            </label>
+          </div>
+
+          <button id="compareButton" type="button" class="primary-button">
+            Pick this one
+          </button>
+          <button id="saveButton" type="button" class="secondary-button" disabled>
+            Save pick
+          </button>
+        </aside>
+      </section>
+
+      <section class="result-section">
+        <div class="panel-heading compact-heading">
+          <div>
+            <p class="step-label">Today’s pick</p>
+            <h2>Decision board</h2>
+          </div>
+        </div>
+        <div id="result" class="empty-result">
+          Upload or try a demo shelf, then ask ThisOne to pick one.
+        </div>
+      </section>
+
+      <section class="saved-section">
+        <div class="panel-heading">
+          <p class="step-label">Saved picks</p>
+          <h2>Your grocery memory</h2>
+        </div>
+        <div id="savedList" class="saved-list">
+          <p class="helper-text">Saved comparisons will appear here.</p>
+        </div>
+      </section>
+
+      <footer>
+        ThisOne reads visible cues only. Prototype estimates are not lab tests
+        or medical advice. Always check date, smell, storage, and local food
+        safety guidance before buying or cooking.
+      </footer>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
