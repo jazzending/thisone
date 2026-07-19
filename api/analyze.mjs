@@ -1,5 +1,7 @@
 const MAX_OPTIONS = 4;
 const MAX_IMAGE_CHARS = 1_500_000;
+const LIVE_ANALYSIS_MODEL = "gpt-5.6-luna";
+const LIVE_ANALYSIS_MAX_COMPLETION_TOKENS = 500;
 
 const foodComparisonSchema = {
   type: "object",
@@ -61,6 +63,10 @@ export default async function handler(request, response) {
     return error(response, 503, "Live analysis has not been configured yet.");
   }
 
+  if (process.env.THISONE_LIVE_ANALYSIS_ENABLED !== "true") {
+    return error(response, 503, "Live analysis is temporarily off. You can still use the demo scan.");
+  }
+
   const { category, images } = request.body || {};
   const allowedCategories = ["fruit", "veg", "seafood", "meat"];
   if (!allowedCategories.includes(category) || !Array.isArray(images) || !images.length || images.length > MAX_OPTIONS) {
@@ -85,7 +91,8 @@ For meat and seafood, part_or_variety should be the likely cut or visible sectio
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-5.6",
+        model: LIVE_ANALYSIS_MODEL,
+        reasoning_effort: "none",
         messages: [{
           role: "user",
           content: [
@@ -101,7 +108,7 @@ For meat and seafood, part_or_variety should be the likely cut or visible sectio
             schema: foodComparisonSchema
           }
         },
-        max_completion_tokens: 1400
+        max_completion_tokens: LIVE_ANALYSIS_MAX_COMPLETION_TOKENS
       })
     });
 
