@@ -53,7 +53,7 @@ Core flow:
 This project has two modes:
 
 - **Demo mode** uses structured sample data and local scoring logic so judges can reliably test the product flow without an API key.
-- **Live analysis mode** sends uploaded photos to a server-side GPT-5.6 vision request. GPT-5.6 extracts cautious, photo-supported cues, then the existing recommendation flow uses those cues alongside the shopper's timing, cooking plan, and preferences.
+- **Live analysis mode** sends uploaded photos to a server-side GPT-5.6 Luna vision request. GPT-5.6 Luna is the lower-cost model in the GPT-5.6 family; it extracts cautious, photo-supported cues, then the existing recommendation flow uses those cues alongside the shopper's timing, cooking plan, and preferences.
 
 Live analysis requires an `OPENAI_API_KEY` environment variable in the server runtime. The API key is never sent to the browser and is ignored by Git.
 
@@ -118,11 +118,12 @@ http://localhost:8080
 
 ### Live GPT-5.6 Analysis
 
-The `api/analyze.mjs` server function calls GPT-5.6 and keeps the API key on the server.
+The `api/analyze.mjs` server function calls GPT-5.6 Luna and keeps the API key on the server. The initial live test is deliberately limited to a compressed photo and a short structured response to control cost.
 
 1. Deploy this folder to Vercel.
 2. In the Vercel project settings, add an environment variable named `OPENAI_API_KEY` and paste your key there.
-3. Redeploy, then upload 1-4 photos in ThisOne.
+3. Add `THISONE_LIVE_ANALYSIS_ENABLED=false`. The public demo will remain safe to share and will not make paid API requests.
+4. Only while recording a real test, change `THISONE_LIVE_ANALYSIS_ENABLED` to `true`, redeploy, and upload one compressed photo. Change it back to `false` and redeploy as soon as the recording is complete.
 
 Never put the key in `app.js`, `index.html`, a GitHub commit, or a public form. `.env` is excluded by `.gitignore`; `.env.example` is only a safe template.
 
